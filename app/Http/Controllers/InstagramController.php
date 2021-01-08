@@ -21,6 +21,16 @@ class InstagramController extends Controller
         //
     }
 
+    public function getDownloadLink(Request $request)
+    {
+        $url = $request->input('url');
+        $client = new IG($url);
+
+        return response()->json([
+            'download' => $client->getDownloadUrl()
+        ]);
+    }
+
     public function cut(Request $request)
     {
         $url = $request->input('url');

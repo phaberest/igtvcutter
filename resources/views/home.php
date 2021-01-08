@@ -15,7 +15,8 @@
                 <div class="col">
                     <input type="text" required placeholder="Url di share IGTV" name="url" x-model="url">
                 </div>
-                <div class="col-3 is-vertical-align">
+                <div class="col-4 is-vertical-align">
+                    <button @click.prevent="downloadLink($refs)">Scarica IGTV</button>&nbsp;
                     <button @click.prevent="submitForm($refs)">Dividi et impera</button>
                 </div>
                 </form>
@@ -99,6 +100,14 @@
                 </div>
             </div>
         </template>
+
+        <template x-if="link">
+            <div class="row">
+                <div class="col">
+                    <a class="button primary" :href="link" download target="_blank">Scarica IGTV selezionata</a>
+                </div>
+            </div>
+        </template>
     </div>
 
     <script>
@@ -108,6 +117,22 @@
             clips: [],
             success: false,
             processing: false,
+            link: '',
+            downloadLink() {
+                fetch('/get-link', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'post',
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
+                    body: `url=${this.url}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.link = data.download;
+                });
+            },
             submitForm() {
                 this.clips = [];
                 this.success = false;
