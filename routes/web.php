@@ -23,4 +23,4 @@ $router->get('/download/{id}', ['as' => 'download', function ($id) {
     return response()->download(storage_path("videos/{$id}"));
 }]);
 
-$router->post('/cut', 'ExampleController@cut');
+$router->post('/cut', 'InstagramController@cut');

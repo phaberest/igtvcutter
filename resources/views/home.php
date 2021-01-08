@@ -31,7 +31,18 @@
         <template x-if="processing">
             <div class="row">
                 <div class="col">
-                    <p>È in momenti come questo che penso alla vita e a quanti cagnolini possono nascere in una sola cucciolata. Lo sai che possono essere fino a 15? Non ne sono davvero sicuro in realtà.</p>
+                    <div x-show="clips.length === 0">
+                        <p>È incredibile come sia lento a passare il tempo quando fissi lo schermo così a lungo, ci hai mai pensato?</p>
+                    </div>
+                    <div x-show="clips.length === 1">
+                        <p>E pensare che da bambini avevamo fretta che il tempo passasse, volevamo essere più grandi. Che poi, più grandi per fare gli astronauti. Poi abbiamo scoperto la scuola e...va beh.</p>
+                    </div>
+                    <div x-show="clips.length === 2">
+                        <p>C'è sempre tempo eppure il tempo manca sempre...però è sempre tempo per una pizza. Senti, lo so, questa era particolarmente pessima, ma sono le 3 di notte e sto cercando di impegnare il tuo tempo.</p>
+                    </div>
+                    <div x-show="clips.length === 3">
+                        <p>È in momenti come questo che penso alla vita e a quanti cagnolini possono nascere in una sola cucciolata. Lo sai che possono essere fino a 15? Non ne sono davvero sicuro in realtà.</p>
+                    </div>
                 </div>
             </div>
         </template>
@@ -73,13 +84,13 @@
                 </div>
             </div>
         </template>
-        <template x-if="success">
+        <template x-if="clips.length">
             <div class="row">
                 <div class="col">    
-                    <h2>Taglio e cucito pronto!</h2>
+                    <h2>Taglio e cucito pronto! (<span x-text="clips.length"></span>/4)</h2>
 
                     <ul>
-                        <template x-for="(item, index) in splits">
+                        <template x-for="(item, index) in clips">
                             <li>
                                 <a :href="item" target="_blank" download x-text="`Split ${index + 1}`"></a>
                             </li>
@@ -94,10 +105,11 @@
     function component () {
         return {
             url: '',
-            splits: [],
+            clips: [],
             success: false,
             processing: false,
             submitForm() {
+                this.clips = [];
                 this.success = false;
                 this.processing = true;
                 fetch(this.$refs.form.action, {
@@ -107,16 +119,56 @@
                     },
                     method: 'post',
                     headers: {'Content-Type':'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
-                    body: `url=${this.url}`
+                    body: `url=${this.url}&clip=0`
                 })
                 .then(response => response.json())
                 .then(data => {
-                    this.url = '';
-                    this.processing = false;
-                    this.success = true;
-                    this.splits = data.clips;
-                    return this.success === true
-                });
+                    this.clips.push(data.clip);
+                    fetch(this.$refs.form.action, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        method: 'post',
+                        headers: {'Content-Type':'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
+                        body: `url=${this.url}&clip=1`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.clips.push(data.clip);
+                        fetch(this.$refs.form.action, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            method: 'post',
+                            headers: {'Content-Type':'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
+                            body: `url=${this.url}&clip=2`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.clips.push(data.clip);
+                            fetch(this.$refs.form.action, {
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                method: 'post',
+                                headers: {'Content-Type':'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
+                                body: `url=${this.url}&clip=3`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                this.clips.push(data.clip);
+                            })
+                            .then(() => {
+                                this.url = '';
+                                this.success = true;
+                                this.processing = false;
+                            })
+                        })
+                    })
+                })
             }
         }
     }
