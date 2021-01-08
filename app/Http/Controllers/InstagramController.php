@@ -79,7 +79,7 @@ class InstagramController extends Controller
         }
 
         return response()->json([
-            'clip' => route('download', ['id' => "{$export_path}_{$clip}.mp4"]),
+            'clip' => route('download', ['id' => "{$id}_{$clip}.mp4"]),
         ]);
     }
 }
