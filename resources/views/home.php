@@ -24,7 +24,7 @@
         <template x-if="!processing">
             <div class="row">
                 <div class="col">
-                    <p>Incolla l'indirizzo di share della IGTV che devi spezzare, otterrai i 4 video tagliati che ti servono. Non bere troppo caffè mentre aspetti, meglio una tisana, che sennò ti agiti, sudi, ti viene la febbre e finisco a leggere i libri di Aranzulla.</p>
+                    <p>Incolla l'indirizzo di share della IGTV che devi spezzare, otterrai i 4 video tagliati che ti servono. Non bere troppo caffè mentre aspetti, meglio una tisana, che sennò ti agiti, sudi, ti viene la febbre e finisci a leggere i libri di Aranzulla.</p>
                 </div>
             </div>
         </template>
